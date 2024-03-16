@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/letter.css">
+    <style>
+        .background {
+            background-image: url('/images/picture.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(5px);
+            min-height: calc(100vh - 55px);
+        }
+        .ttsButton{
+            border: black solid 2px
+        }
+    </style>
+</head>
+<body>
+<!--공통부분-->
+<header th:replace="~{/template/header.html :: fragment-header}"></header>
+<!--공통부분-->
+<div class="background">
+    <div class="container" style="min-height: calc(100vh - 40px); text-align: center">
+        <div class="test-area" style="min-height: calc(100vh - 40px);">
+<form action="/sentence/listen" method="post">
+    <h1>일본어 문장 테스트</h1>
+    <hr>
+    <h1>각 문장을 듣고 뜻을 한국어로 써주세요.</h1>
+    <div class="left" >
+        <div th:each="sentence : ${sentence1}" style="margin-bottom: 40px;">
+            <div>
+            <span style="display: inline-block; vertical-align: middle; text-align: center">
+                <span th:text="${sentenceStat.count}+'. '"></span>&nbsp &nbsp
+                <button onclick="tts(this.getAttribute('value')); return false;" th:class="ttsButton" th:value="${sentence.getJp()}">재생</button>
+                <button onclick="stopTTS(); return false;" th:class="ttsButton"><span style="display: inline-block; vertical-align: middle;">정지</span></button>
+            </span>
+            </div>
+            <input type="text" class="answer" name="ans" style="width: 384px; background-color: aliceblue; margin-top: 5px">
+        </div>
+    </div>
+    <div class="right">
+        <div th:each="sentence : ${sentence2}" style="margin-bottom: 40px;">
+            <div>
+            <span style="display: inline-block; vertical-align: middle;">
+            <span th:text="${sentenceStat.count+5}+'. '"></span>&nbsp &nbsp
+                <button onclick="tts(this.getAttribute('value')); return false;" th:class="ttsButton" th:value="${sentence.getJp()}">재생</button><button onclick="stopTTS(); return false;" th:class="ttsButton">정지</button>
+            </span>
+            </div>
+
+            <input type="text" class="answer" name="ans" style="width: 384px; background-color: aliceblue; margin-top: 5px">
+        </div>
+    </div>
+    <button type="submit" style="border: black solid 2px">제출</button>
+</form>
+        </div>
+    </div>
+</div>
+<!--공통부분-->
+<div th:replace="~{template/sidebar.html :: fragment-sidbar}"></div>
+<th:block th:replace="~{/template/common-scripts.html :: scripts}"></th:block>
+<!--공통부분-->
+</body>
+<script>
+    let synth = window.speechSynthesis;
+
+
+    function tts(text){
+        let textToSpeak = new SpeechSynthesisUtterance(text);
+        textToSpeak.lang = 'ja-JP';
+        textToSpeak.rate = 0.9;
+
+        synth.speak(textToSpeak);
+    }
+
+    function stopTTS() {
+        synth.cancel();
+    }
+</script>
+</html>

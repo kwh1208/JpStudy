@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/letter.css">
+    <style>
+        .background {
+            background-image: url('/images/picture.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(5px);
+            min-height: calc(100vh - 75px);
+        }
+        .wrong{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<!--공통부분-->
+<header th:replace="~{/template/header.html :: fragment-header}"></header>
+<!--공통부분-->
+<div class="background">
+    <div class="container" style="min-height: calc(100vh - 75px); text-align: center">
+        <div class="test-area" style="min-height: calc(100vh - 75px);">
+            <br>
+            <h1>시험지</h1>
+            <hr>
+            <h1 th:text="'총점 '+${score}+'/10'"></h1>
+            <div class="left" >
+                <div th:each="result : ${result1}" style="margin-bottom: 40px;">
+                    <h1 th:text="${resultStat.count}+'. '+${result.getQuestion()}"
+                        th:classappend="${!result.isCorrect()} ? 'wrong' : ''">문제</h1>
+                    <span style="justify-content: center;">
+                    <h1 th:text="'제출한 답안 : '+${result.getSubmit()}">제출</h1>
+                    <h1 th:if="${!result.isCorrect()}"
+                        th:text="'정답 : '+${result.getAnswer()}">정답</h1>
+                    </span>
+                </div>
+                <br>
+            </div>
+            <div class="right">
+                <div th:each="result : ${result2}" style="margin-bottom: 40px;">
+                    <h1 th:text="${resultStat.count+5}+'. '+${result.getQuestion()}"
+                        th:classappend="${!result.isCorrect()} ? 'wrong' : ''">문제</h1>
+                    <span style="justify-content: center;">
+                    <h1 th:text="'제출한 답안 : '+${result.getSubmit()}">제출</h1>
+                    <h1 th:if="${!result.isCorrect()}"
+                        th:text="'정답 : '+${result.getAnswer()}">정답</h1>
+                    </span>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+<!--공통부분-->
+<div th:replace="~{template/sidebar.html :: fragment-sidbar}"></div>
+<th:block th:replace="~{/template/common-scripts.html :: scripts}"></th:block>
+<!--공통부분-->
+</body>
+</html>

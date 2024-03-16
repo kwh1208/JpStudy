@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <style>
+        .background {
+            background-image: url('/images/picture.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(5px);
+        }
+        label::before {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!--공통부분-->
+<header th:replace="~{/template/header.html :: fragment-header}"></header>
+<!--공통부분-->
+<div class="background">
+    <div class="container">
+        <form action="/dialog/speak" method="post">
+            <table>
+                <tr th:each="dialogs, dialogStat : ${dialog}" style="background-color: white">
+                    <td>
+                        <input type="radio" name="situation" th:value="${dialogs.getSituation() + '/' + dialogs.getUserRole() + '/' + dialogs.getBotRole()}" th:id="${dialogStat.count}">
+                        <label th:for="${dialogStat.count}">
+                            <h2 th:text="${dialogs.getSituationKr()}">상황</h2>
+                            <h2 th:text="${dialogs.getUserRoleKr()}">유저역할</h2>
+                            <h2 th:text="${dialogs.getBotRoleKr()}">상대방 역할</h2>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+            <button type="submit">제출</button>
+        </form>
+    </div>
+</div>
+
+<!--공통부분-->
+<div th:replace="~{template/sidebar.html :: fragment-sidbar}"></div>
+<th:block th:replace="~{/template/common-scripts.html :: scripts}"></th:block>
+<!--공통부분-->
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <style>
+        .background {
+            background-image: url('/images/picture.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+<!--공통부분-->
+<header th:replace="~{/template/header.html :: fragment-header}"></header>
+<!--공통부분-->
+<div class="background">
+    <div class="container">
+        <a href="game/wordChain">
+            <div class="link-box_1">
+                <h1 class="subject" style="display: block">끝말잇기</h1>
+            </div>
+        </a>
+        <a href="game/twentyQuestion">
+            <div class="link-box_2">
+                <h1 class="subject" style="display: block">스무고개</h1>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!--공통부분-->
+<div th:replace="~{template/sidebar.html :: fragment-sidbar}"></div>
+<th:block th:replace="~{/template/common-scripts.html :: scripts}"></th:block>
+<!--공통부분-->
+</body>
+</html>

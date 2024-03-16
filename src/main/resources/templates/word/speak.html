@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/letter.css">
+    <style>
+        .background {
+            background-image: url('/images/picture.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(5px);
+            min-height: calc(100vh - 55px);
+        }
+        .recode{
+            border: black solid 2px;
+            display : inline;
+        }
+    </style>
+</head>
+<body>
+<!--공통부분-->
+<header th:replace="~{/template/header.html :: fragment-header}"></header>
+<!--공통부분-->
+<div class="background">
+    <div class="container" style="min-height: calc(100vh - 40px); text-align: center">
+        <div class="test-area" style="min-height: calc(100vh - 40px);">
+            <form action="/word/speak" method="post">
+                <br>
+                <h1>일본어 단어 테스트</h1>
+                <hr>
+                <h1>각 단어를 일본어로 말해주세요.</h1>
+                <div class="left" style="display: grid; place-items: center;">
+                    <div th:each="word : ${word1}" style="margin-bottom: 40px;">
+                        <h1 th:text="${wordStat.count}+'. '+${word.getKr()}"></h1>
+                        <div th:id="startButton+${wordStat.count}" onclick="startRecording(this.getAttribute('count'));" th:count="${wordStat.count}" th:class="recode">녹음</div>
+                        <div th:id="stopButton+${wordStat.count}" onclick="stopRecording(this.getAttribute('count'));" th:count="${wordStat.count}" th:class="recode">정지</div>
+                        <input type="text" name="ans" readonly th:id="transcription+${wordStat.count}" style="width: 384px; background-color: aliceblue;">
+                    </div>
+                </div>
+                <div class="right" style="display: grid; place-items: center;">
+                    <div th:each="word : ${word2}" style="margin-bottom: 40px;">
+                        <div>
+                            <h1 th:text="${wordStat.count+5}+'. '+${word.getKr()}"></h1>
+                            <div th:id="startButton+${wordStat.count+5}" onclick="startRecording(this.getAttribute('count'));" th:count="${wordStat.count+5}" th:class="recode">녹음</div>
+                            <div th:id="stopButton+${wordStat.count+5}" onclick="stopRecording(this.getAttribute('count'));" th:count="${wordStat.count+5}" th:class="recode">정지</div>
+                            <input type="text" name="ans" readonly th:id="transcription+${wordStat.count+5}" style="width: 384px; background-color: aliceblue;">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit">제출</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!--공통부분-->
+<div th:replace="~{template/sidebar.html :: fragment-sidbar}"></div>
+<th:block th:replace="~{/template/common-scripts.html :: scripts}"></th:block>
+<!--공통부분-->
+</body>
+<script>
+    let recognition;
+
+    function startRecording(num) {
+        console.log(num);
+        let startCount = "startButton"+num;
+        let stopCount = "startButton"+num;
+        let transcriptionCount = "transcription"+num;
+        const startButton = document.getElementById(startCount);
+        const stopButton = document.getElementById(stopCount);
+        const transcriptionDiv = document.getElementById(transcriptionCount);
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'ja-JP'; // 언어 설정
+        recognition.interimResults = true;
+
+        recognition.onresult = function (event) {
+            const result = event.results[event.results.length - 1];
+            const transcript = result[0].transcript;
+
+            if (result.isFinal) {
+                transcriptionDiv.value = transcript;
+            }
+        };
+
+        recognition.onend = function () {
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        };
+
+        startButton.disabled = true;
+        stopButton.disabled = false;
+
+        recognition.start();
+    }
+
+    function stopRecording(num) {
+        let startCount = "startButton"+num;
+        let stopCount = "startButton"+num;
+        const startButton = document.getElementById(startCount);
+        const stopButton = document.getElementById(stopCount);
+        recognition.stop();
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+</script>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/letter.css">
+    <style>
+        .background {
+            background-image: url('/images/picture.png');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(5px);
+            min-height: calc(100vh - 55px);
+        }
+        .ttsButton{
+            border: black solid 2px
+        }
+    </style>
+</head>
+<body>
+<!--공통부분-->
+<header th:replace="~{/template/header.html :: fragment-header}"></header>
+<!--공통부분-->
+<div class="background">
+    <div class="container" style="min-height: calc(100vh - 40px); text-align: center">
+        <div class="test-area" style="min-height: calc(100vh - 40px);">
+<form action="/sentence/speak" method="post">
+    <h1>일본어 문장 테스트</h1>
+    <hr>
+    <h1>각 문장을 일본어로 말해주세요.</h1>
+    <div class="left" >
+        <div th:each="sentence : ${sentence1}" style="margin-bottom: 40px;">
+            <h1 th:text="${sentenceStat.count}+'. '+${sentence.getKr()}"></h1>
+            <div th:id="startButton+${sentenceStat.count}" onclick="startRecording(this.getAttribute('value')); return false" th:count="${sentenceStat.count}">녹음</div>
+            <div th:id="stopButton+${sentenceStat.count}" onclick="stopRecording(this.getAttribute('value')); return false" th:count="${sentenceStat.count}">정지</div>
+            <div th:id="transcription+${sentenceStat.count}" ></div>
+        </div>
+    </div>
+    <div class="right" >
+        <div th:each="sentence : ${sentence2}" style="margin-bottom: 40px;">
+            <div>
+                <div th:text="${sentenceStat.count+5}+'. '+${sentence.getKr()}"></div>
+                <div th:id="startButton+${sentenceStat.count}" onclick="startRecording(this.getAttribute('value')); return false" th:count="${sentenceStat.count+5}">녹음</div>
+                <div th:id="stopButton+${sentenceStat.count}" onclick="stopRecording(this.getAttribute('value')); return false" th:count="${sentenceStat.count+5}">정지</div>
+                <div th:id="transcription+${sentenceStat.count}" ></div>
+            </div>
+        </div>
+    </div>
+    <button type="submit">제출</button>
+</form>
+        </div>
+    </div>
+</div>
+<!--공통부분-->
+<div th:replace="~{template/sidebar.html :: fragment-sidbar}"></div>
+<th:block th:replace="~{/template/common-scripts.html :: scripts}"></th:block>
+<!--공통부분-->
+</body>
+<script>
+    let recognition;
+
+    function startRecording(num) {
+        let startCount = "startButton"+num;
+        let stopCount = "startButton"+num;
+        let transcriptionCount = "transcription"+num;
+        const startButton = document.getElementById(startCount);
+        const stopButton = document.getElementById(stopCount);
+        const transcriptionDiv = document.getElementById(transcriptionCount);
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'ja-JP'; // 언어 설정
+        recognition.interimResults = true;
+
+        recognition.onresult = function (event) {
+            const result = event.results[event.results.length - 1];
+            const transcript = result[0].transcript;
+
+            if (result.isFinal) {
+                transcriptionDiv.innerHTML = transcript;
+            }
+        };
+
+        recognition.onend = function () {
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        };
+
+        startButton.disabled = true;
+        stopButton.disabled = false;
+
+        recognition.start();
+    }
+
+    function stopRecording(num) {
+        let startCount = "startButton"+num;
+        let stopCount = "startButton"+num;
+        const startButton = document.getElementById(startCount);
+        const stopButton = document.getElementById(stopCount);
+        recognition.stop();
+        startButton.disabled = false;
+        stopButton.disabled = true;
+    }
+</script>
+</html>
