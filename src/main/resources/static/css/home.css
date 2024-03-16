@@ -1,0 +1,30 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+[class*="link-box"]{
+    background-color: white;
+    border: 3px solid #4dd6d3;
+    border-radius: 10px;
+    margin-right: 30px;
+    width: 350px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 5px 5px 5px;
+    z-index: 10;
+}
+.link-box h1 {
+    margin: 0;
+}
+.detail-links {
+    display: flex;
+    flex-direction: row; /* 세로 방향 대신 가로 방향으로 배치 */
+    flex-wrap: wrap; /* 요소들이 넘칠 때 줄바꿈 */
+    justify-content: center; /* 가운데 정렬을 위한 설정 */
+    gap: 10px; /* 각 요소 사이의 간격 조정 */
+}

@@ -1,0 +1,31 @@
+.test-area{
+    background-color: rgb(200, 202, 194);
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+.left{
+    width: 48%;
+    min-height: 700px;
+    float: left;
+}
+.right{
+    width: 48%;
+    min-height: 700px;
+    float: right;
+}
+hr{
+    border: 1px solid black;
+}
+.answer{
+    margin-left: auto;
+    margin-right: auto;
+}
+body{
+    -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+    display: none;
+}
